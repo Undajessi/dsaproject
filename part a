@@ -6,3 +6,17 @@ class Queue {
     public boolean isEmpty()                 
     public void displayQueue()                
 }
+
+java
+class SinglyLinkedList {
+    public void insertStudent(Student s, int position)  
+    public void deleteStudent(String studentNumber)     
+    public Student searchStudent(String studentNumber) 
+    public void displayStudents()                      
+}
+
+class Node {
+    Student data;            
+    Node next;                 
+}
+
