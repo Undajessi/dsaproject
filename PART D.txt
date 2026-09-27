@@ -1,0 +1,433 @@
+public static void main(String[] args) {
+
+    Scanner input = new Scanner(System.in);
+
+    Queue waitingQueue = new Queue();
+    SinglyLinkedList serviceRecords = new SinglyLinkedList();
+
+    int choice;
+
+    do {
+
+        System.out.println();
+        System.out.println("==============================================");
+        System.out.println("          NUST CAMPUS SERVICE CENTRE");
+        System.out.println("==============================================");
+        System.out.println("1. Add student to waiting queue");
+        System.out.println("2. Serve next student");
+        System.out.println("3. Display waiting students");
+        System.out.println("4. Add student service record");
+        System.out.println("5. Display student service records");
+        System.out.println("6. Search for student record");
+        System.out.println("7. Remove student record");
+        System.out.println("8. Display daily statistics");
+        System.out.println("9. Sort service times");
+        System.out.println("10. Run sorting experiment");
+        System.out.println("11. Exit");
+        System.out.println("==============================================");
+
+        System.out.print("Select option: ");
+        choice = input.nextInt();
+        input.nextLine();
+
+        switch (choice) {
+
+           //Add students to queue
+            case 1:
+
+                System.out.println("\n--- ADD STUDENT TO WAITING QUEUE ---");
+
+                System.out.print("Student number: ");
+                String studentNumber = input.nextLine();
+
+                System.out.print("Student name: ");
+                String name = input.nextLine();
+
+                System.out.print("Service required: ");
+                String serviceType = input.nextLine();
+
+                System.out.print("Estimated service time (minutes): ");
+                int serviceTime = input.nextInt();
+                input.nextLine();
+
+                Student student = new Student(
+                        studentNumber,
+                        name,
+                        serviceType,
+                        serviceTime
+                );
+
+                waitingQueue.enqueue(student);
+
+                break;
+		
+            //Serve next student
+            case 2:
+
+                System.out.println("\n--- SERVE NEXT STUDENT ---");
+
+                if (waitingQueue.isEmpty()) {
+
+                    System.out.println("No students are waiting.");
+
+                } else {
+
+                    Student servedStudent =
+                            waitingQueue.dequeue();
+
+                    serviceRecords.insertAtEnd(servedStudent);
+
+                    System.out.println(
+                            servedStudent.getName()
+                            + " has been served."
+                    );
+                }
+
+                break;
+
+            //Display waiting students
+            case 3:
+
+                System.out.println("\n--- WAITING STUDENTS ---");
+
+                waitingQueue.displayQueue();
+
+                break;
+
+            //Add service record
+            case 4:
+
+                System.out.println(
+                        "\n--- ADD STUDENT SERVICE RECORD ---"
+                );
+
+                System.out.print("Student number: ");
+                String recordNumber = input.nextLine();
+
+                System.out.print("Student name: ");
+                String recordName = input.nextLine();
+
+                System.out.print("Service type: ");
+                String recordService = input.nextLine();
+
+                System.out.print("Service time (minutes): ");
+                int recordTime = input.nextInt();
+                input.nextLine();
+
+                Student record = new Student(
+                        recordNumber,
+                        recordName,
+                        recordService,
+                        recordTime
+                );
+
+                System.out.println("\nWhere should the record be inserted?");
+                System.out.println("1. Beginning");
+                System.out.println("2. End");
+                System.out.println("3. Position");
+
+                System.out.print("Select: ");
+                int insertChoice = input.nextInt();
+                input.nextLine();
+
+                switch (insertChoice) {
+
+                    case 1:
+                        serviceRecords.insertAtBeginning(record);
+                        break;
+
+                    case 2:
+                        serviceRecords.insertAtEnd(record);
+                        break;
+
+                    case 3:
+
+                        System.out.print("Enter position: ");
+                        int position = input.nextInt();
+                        input.nextLine();
+
+                        serviceRecords.insertAtPosition(
+                                record,
+                                position
+                        );
+
+                        break;
+
+                    default:
+                        System.out.println(
+                                "Invalid insertion option."
+                        );
+                }
+
+                break;
+
+
+            //Display service records
+            case 5:
+
+                System.out.println(
+                        "\n--- STUDENT SERVICE RECORDS ---"
+                );
+
+                serviceRecords.displayStudents();
+
+                System.out.println("\nList structure:");
+
+                serviceRecords.displayWithLinks();
+
+                break;
+
+
+            //Search student
+            case 6:
+
+                System.out.println(
+                        "\n--- SEARCH FOR STUDENT RECORD ---"
+                );
+
+                System.out.print(
+                        "Enter student number: "
+                );
+
+                String searchNumber = input.nextLine();
+
+                serviceRecords.searchStudent(
+                        searchNumber
+                );
+
+                break;
+
+            //Delete student
+            case 7:
+
+                System.out.println(
+                        "\n--- REMOVE STUDENT RECORD ---"
+                );
+
+                System.out.print(
+                        "Enter student number to remove: "
+                );
+
+                String deleteNumber = input.nextLine();
+
+                serviceRecords.deleteStudent(
+                        deleteNumber
+                );
+
+                break;
+
+
+            //Daily statistics
+            case 8:
+
+                System.out.println(
+                        "\n--- DAILY STATISTICS ---"
+                );
+
+                int[] serviceTimes =
+                        serviceRecords.getServiceTimes();
+
+                if (serviceTimes.length == 0) {
+
+                    System.out.println(
+                            "No service records available."
+                    );
+
+                } else {
+
+                    int total = 0;
+                    int shortest = serviceTimes[0];
+                    int longest = serviceTimes[0];
+
+                    for (int time : serviceTimes) {
+
+                        total += time;
+
+                        if (time < shortest) {
+                            shortest = time;
+                        }
+
+                        if (time > longest) {
+                            longest = time;
+                        }
+                    }
+
+                    double average =
+                            (double) total / serviceTimes.length;
+
+                    System.out.println(
+                            "Students served: "
+                            + serviceTimes.length
+                    );
+
+                    System.out.println(
+                            "Students still waiting: "
+                            + waitingQueue.getSize()
+                    );
+
+                    System.out.println(
+                            "Total service time: "
+                            + total + " minutes"
+                    );
+
+                    System.out.printf(
+                            "Average service time: %.2f minutes%n",
+                            average
+                    );
+
+                    System.out.println(
+                            "Shortest service time: "
+                            + shortest + " minutes"
+                    );
+
+                    System.out.println(
+                            "Longest service time: "
+                            + longest + " minutes"
+                    );
+                }
+
+                break;
+
+
+            //Sort service terms
+            case 9:
+
+                System.out.println(
+                        "\n--- SORT SERVICE TIMES ---"
+                );
+
+                int[] arr =
+                        serviceRecords.getServiceTimes();
+
+                if (arr.length == 0) {
+
+                    System.out.println(
+                            "No service times available."
+                    );
+
+                } else {
+
+                    System.out.println(
+                            "1. Selection Sort"
+                    );
+
+                    System.out.println(
+                            "2. Insertion Sort"
+                    );
+
+                    System.out.println(
+                            "3. Merge Sort"
+                    );
+
+                    System.out.println(
+                            "4. Quick Sort"
+                    );
+
+                    System.out.print(
+                            "Select sorting algorithm: "
+                    );
+
+                    int sortChoice = input.nextInt();
+                    input.nextLine();
+
+                    switch (sortChoice) {
+
+                        case 1:
+
+                            selectionSort(arr);
+
+                            break;
+
+                        case 2:
+
+                            insertionSort(arr);
+
+                            break;
+
+                        case 3:
+
+                            mergeSort(
+                                    arr,
+                                    0,
+                                    arr.length - 1
+                            );
+
+                            System.out.println(
+                                    "Merge Sort completed."
+                            );
+
+                            break;
+
+                        case 4:
+
+                            quicksort(
+                                    arr,
+                                    0,
+                                    arr.length - 1
+                            );
+
+                            System.out.println(
+                                    "Quick Sort completed."
+                            );
+
+                            break;
+
+                        default:
+
+                            System.out.println(
+                                    "Invalid sorting option."
+                            );
+                    }
+                }
+
+                break;
+
+
+            //Sorting expirement
+            case 10:
+
+                System.out.println(
+                        "\n--- SORTING EXPERIMENT ---"
+                );
+
+                runSortingExperiment();
+
+                break;
+            
+            //Exit
+            case 11:
+
+                System.out.println();
+                System.out.println(
+                        "Thank you for using the "
+                        + "NUST Campus Service Centre."
+                );
+
+                System.out.println(
+                        "Program terminated."
+                );
+
+                break;
+
+            //Invalid choice
+            default:
+
+                System.out.println(
+                        "Invalid option. Please select 1-11."
+                );
+        }
+
+        if (choice != 11) {
+
+            System.out.println();
+            System.out.print(
+                    "Press ENTER to return to the menu..."
+            );
+
+            input.nextLine();
+        }
+
+    } while (choice != 11);
+
+    input.close();
+}
