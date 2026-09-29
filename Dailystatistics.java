@@ -1,7 +1,7 @@
 public class Dailystatistics {
     public static void main(String[] args) {
 
-        int[] serviceTimes = {12, 5, 8, 4};
+        int[] serviceTimes = {12, 5, 8, 4, 10, 15};
 
         int totalStudents = serviceTimes.length;
         int totalTime = 0;
